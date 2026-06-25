@@ -7,10 +7,11 @@ import Input from "@/components/ui/Input";
 import { motion } from "framer-motion";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import api from "@/lib/api";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { login } = useAuth();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -28,17 +29,10 @@ export default function LoginPage() {
 
     try {
       setLoading(true);
-
-      const res = await api.post("/auth/login", {
-        email,
-        password,
-      });
-
-      if (res.data.success) {
-        router.push("/dashboard");
-      }
+      await login(email, password);
+      router.push("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.message || "Login failed");
+      setError(err.response?.data?.message || "Invalid email or password");
     } finally {
       setLoading(false);
     }
@@ -65,7 +59,7 @@ export default function LoginPage() {
               </label>
               <Input
                 type="email"
-                placeholder="alex@flowsync.com"
+                placeholder="you@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -84,7 +78,7 @@ export default function LoginPage() {
             </div>
 
             {error && (
-              <p className="text-sm text-red-500 bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2">
+              <p className="text-sm text-red-400 bg-red-500/10 border border-red-500/20 rounded-xl px-3 py-2">
                 {error}
               </p>
             )}
@@ -116,6 +110,7 @@ export default function LoginPage() {
         </div>
       </div>
 
+      {/* Right Illustration Section */}
       <div className="hidden lg:flex flex-1 bg-charcoal relative overflow-hidden items-center justify-center p-12">
         <div className="absolute top-0 right-0 w-full h-full bg-linear-to-br from-violet-dark/40 to-midnight"></div>
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/30 rounded-full blur-[100px]"></div>
@@ -127,13 +122,18 @@ export default function LoginPage() {
           className="relative z-10 glass-card p-8 rounded-3xl max-w-md w-full shadow-2xl border border-white/10"
         >
           <div className="flex items-center mb-6">
-            <div className="w-10 h-10 rounded-full bg-mint flex items-center justify-center text-white font-bold mr-4">
-              AL
+            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold mr-4">
+              FS
             </div>
             <div>
               <p className="font-semibold text-white">Secure login enabled</p>
               <p className="text-xs text-white/60">Connected with backend</p>
             </div>
+          </div>
+          <div className="space-y-4">
+            <div className="h-3 bg-white/10 rounded-full w-3/4"></div>
+            <div className="h-3 bg-white/10 rounded-full w-1/2"></div>
+            <div className="h-3 bg-white/10 rounded-full w-5/6"></div>
           </div>
         </motion.div>
       </div>

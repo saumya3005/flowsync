@@ -13,16 +13,16 @@ export default function TaskCard({ task, onClick }) {
   };
 
   return (
-    <div 
+    <div
       onClick={onClick}
       className="bg-card border border-border rounded-xl p-4 shadow-sm hover:shadow-md hover:border-primary/40 transition-all cursor-pointer"
     >
       <div className="flex justify-between items-start mb-2">
         <Badge variant={priorityColors[task.priority]}>{task.priority}</Badge>
       </div>
-      
+
       <h4 className="font-medium text-sm mb-2 leading-tight">{task.title}</h4>
-      
+
       {task.description && (
         <p className="text-xs text-foreground/50 line-clamp-2 mb-4">
           {task.description}
@@ -44,10 +44,10 @@ export default function TaskCard({ task, onClick }) {
             </div>
           )}
           {task.dueDate && (
-             <div className="flex items-center text-coral/80">
-               <Clock className="w-3.5 h-3.5 mr-1" />
-               <span>{new Date(task.dueDate).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}</span>
-             </div>
+            <div className="flex items-center text-coral/80">
+              <Clock className="w-3.5 h-3.5 mr-1" />
+              <span>{new Date(task.dueDate).toLocaleDateString("en-US", { month: 'short', day: 'numeric' })}</span>
+            </div>
           )}
         </div>
 

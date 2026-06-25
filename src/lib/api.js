@@ -8,9 +8,9 @@ const API = axios.create({
   },
 });
 
-// Automatically attach JWT from localStorage if available (fallback for non-cookie flows)
+// Automatically attach JWT from localStorage if available
 API.interceptors.request.use((config) => {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  const token = typeof window !== 'undefined' ? localStorage.getItem('flowsyncToken') : null;
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

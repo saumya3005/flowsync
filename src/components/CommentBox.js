@@ -1,8 +1,13 @@
 import { Send } from 'lucide-react';
 import Avatar from './ui/Avatar';
-import { currentUser } from '@/data/mockData';
+import { useAuth } from '@/context/AuthContext';
 
 export default function CommentBox({ comments = [] }) {
+  const { user } = useAuth();
+  
+  const initials = user?.name
+    ? user.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
+    : 'U';
   return (
     <div className="flex flex-col space-y-4">
       {/* Existing Comments list (placeholder structure) */}
@@ -23,7 +28,13 @@ export default function CommentBox({ comments = [] }) {
 
       {/* Input area */}
       <div className="flex space-x-3 items-end pt-4 border-t border-border">
-        <Avatar src={currentUser.avatar} size="sm" className="mb-1" />
+        {user?.avatar ? (
+          <Avatar src={user.avatar} size="sm" className="mb-1" />
+        ) : (
+          <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-bold mb-1">
+            {initials}
+          </div>
+        )}
         <div className="flex-1 relative">
           <textarea
             placeholder="Write a comment..."

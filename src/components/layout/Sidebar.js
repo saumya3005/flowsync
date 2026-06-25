@@ -1,7 +1,10 @@
+"use client";
+
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { LayoutDashboard, FolderKanban, CheckSquare, Users, Bell, Settings, LogOut, Hexagon } from 'lucide-react';
 import { cn } from '@/utils/cn';
+import { useAuth } from '@/context/AuthContext';
 
 const navItems = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
@@ -14,6 +17,11 @@ const navItems = [
 
 export default function Sidebar() {
   const pathname = usePathname();
+  const { user, logout } = useAuth();
+
+  const initials = user?.name
+    ? user.name.split(' ').map((n) => n[0]).join('').toUpperCase().slice(0, 2)
+    : 'U';
 
   return (
     <aside className="w-64 border-r border-border bg-card flex flex-col h-screen fixed left-0 top-0 pt-4">
@@ -48,19 +56,34 @@ export default function Sidebar() {
       </div>
 
       <div className="mt-auto px-4 pb-6">
-        <div className="glass-card rounded-2xl p-4 mb-4">
-          <p className="text-sm font-medium mb-2">Upgrade to Pro</p>
-          <p className="text-xs text-foreground/60 mb-3">Get advanced features and unlimited projects.</p>
-          <button className="w-full py-2 bg-primary hover:bg-primary/90 text-white text-xs font-semibold rounded-lg transition-colors">
-            Upgrade Now
-          </button>
-        </div>
-        <Link href="/login">
-          <div className="flex items-center px-3 py-2 text-foreground/70 hover:bg-coral/10 hover:text-coral rounded-xl transition-colors cursor-pointer group">
-            <LogOut className="w-5 h-5 mr-3 text-foreground/50 group-hover:text-coral" />
-            Logout
+        {/* User info card */}
+        {user && (
+          <div className="glass-card rounded-2xl p-4 mb-4 flex items-center gap-3">
+            {user.avatar ? (
+              <img
+                src={user.avatar}
+                alt={user.name}
+                className="w-9 h-9 rounded-full border border-border object-cover shrink-0"
+              />
+            ) : (
+              <div className="w-9 h-9 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs font-bold shrink-0">
+                {initials}
+              </div>
+            )}
+            <div className="min-w-0">
+              <p className="text-sm font-semibold truncate">{user.name}</p>
+              <p className="text-xs text-foreground/50 truncate">{user.role}</p>
+            </div>
           </div>
-        </Link>
+        )}
+
+        <button
+          onClick={logout}
+          className="w-full flex items-center px-3 py-2 text-foreground/70 hover:bg-coral/10 hover:text-coral rounded-xl transition-colors cursor-pointer group"
+        >
+          <LogOut className="w-5 h-5 mr-3 text-foreground/50 group-hover:text-coral" />
+          Logout
+        </button>
       </div>
     </aside>
   );
