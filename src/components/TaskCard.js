@@ -1,24 +1,29 @@
-import { Paperclip, MessageSquare, Clock } from 'lucide-react';
-import { users } from '@/data/mockData';
+"use client";
+import { Clock, MessageSquare, Paperclip, CheckSquare } from 'lucide-react';
 import Badge from './ui/Badge';
 import Avatar from './ui/Avatar';
 
 export default function TaskCard({ task, onClick }) {
-  const assignee = users.find(u => u.id === task.assigneeId);
-
   const priorityColors = {
-    Low: 'default',
+    High: 'destructive',
     Medium: 'warning',
-    High: 'danger',
+    Low: 'success',
   };
+
+  // Assume assignee is populated from backend { _id, name, avatar }
+  const assignee = task.assignedTo;
+  
+  // Get counts for comments and attachments based on arrays or numeric fields
+  const commentCount = Array.isArray(task.comments) ? task.comments.length : (task.commentCount || 0);
+  const attachmentCount = Array.isArray(task.attachments) ? task.attachments.length : (task.attachmentCount || 0);
 
   return (
     <div
       onClick={onClick}
       className="bg-card border border-border rounded-xl p-4 shadow-sm hover:shadow-md hover:border-primary/40 transition-all cursor-pointer"
     >
-      <div className="flex justify-between items-start mb-2">
-        <Badge variant={priorityColors[task.priority]}>{task.priority}</Badge>
+      <div className="flex justify-between items-start mb-3">
+        <Badge variant={priorityColors[task.priority] || 'default'}>{task.priority}</Badge>
       </div>
 
       <h4 className="font-medium text-sm mb-2 leading-tight">{task.title}</h4>
@@ -29,18 +34,18 @@ export default function TaskCard({ task, onClick }) {
         </p>
       )}
 
-      <div className="flex items-center justify-between mt-auto pt-2">
-        <div className="flex items-center space-x-3 text-foreground/40 text-xs">
-          {task.comments > 0 && (
+      <div className="flex items-center justify-between mt-auto pt-3 border-t border-border/50 text-xs text-foreground/50">
+        <div className="flex items-center space-x-3">
+          {commentCount > 0 && (
             <div className="flex items-center hover:text-primary transition-colors">
               <MessageSquare className="w-3.5 h-3.5 mr-1" />
-              <span>{task.comments}</span>
+              <span>{commentCount}</span>
             </div>
           )}
-          {task.attachments > 0 && (
+          {attachmentCount > 0 && (
             <div className="flex items-center hover:text-primary transition-colors">
               <Paperclip className="w-3.5 h-3.5 mr-1" />
-              <span>{task.attachments}</span>
+              <span>{attachmentCount}</span>
             </div>
           )}
           {task.dueDate && (
@@ -52,7 +57,7 @@ export default function TaskCard({ task, onClick }) {
         </div>
 
         {assignee && (
-          <Avatar src={assignee.avatar} alt={assignee.name} size="sm" title={assignee.name} />
+          <Avatar src={assignee.avatar} alt={assignee.name || 'User'} size="sm" title={assignee.name || 'User'} />
         )}
       </div>
     </div>

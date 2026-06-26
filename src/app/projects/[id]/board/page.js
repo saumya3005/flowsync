@@ -1,44 +1,101 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useParams } from 'next/navigation';
 import DashboardLayout from '@/components/layout/DashboardLayout';
-import { projects, tasks } from '@/data/mockData';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import TaskCard from '@/components/TaskCard';
 import Button from '@/components/ui/Button';
-import { Plus, Settings2, Users } from 'lucide-react';
+import { Plus, Settings2, Users, Loader2 } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
-import Modal from '@/components/ui/Modal';
 import Badge from '@/components/ui/Badge';
-import CommentBox from '@/components/CommentBox';
-import { users } from '@/data/mockData';
+import TaskDrawer from '@/components/modals/TaskDrawer';
+import { useProjects } from '@/context/ProjectContext';
+import api from '@/lib/api';
 
 const initialColumns = ['To Do', 'In Progress', 'Review', 'Completed'];
 
-export default function ProjectBoardPage({ params }) {
-  // Mock unwrapping params or fetching project data
-  const projectId = 'p1'; // Hardcoded for demo if not using real router
-  const project = projects.find(p => p.id === projectId) || projects[0];
+export default function ProjectBoardPage() {
+  const { id: projectId } = useParams();
+  const { projects, loading: projectsLoading } = useProjects();
   
-  const [columns, setColumns] = useState(initialColumns);
-  const [boardTasks, setBoardTasks] = useState(tasks.filter(t => t.projectId === project.id));
-  
+  const [boardTasks, setBoardTasks] = useState([]);
+  const [loadingTasks, setLoadingTasks] = useState(true);
   const [selectedTask, setSelectedTask] = useState(null);
 
-  const onDragEnd = (result) => {
+  // Find current project
+  const project = projects.find(p => p._id === projectId);
+
+  // Fetch project tasks
+  useEffect(() => {
+    if (!projectId) return;
+    
+    const fetchTasks = async () => {
+      try {
+        setLoadingTasks(true);
+        const res = await api.get(`/tasks/project/${projectId}`);
+        if (res.data.success) {
+          setBoardTasks(res.data.data);
+        }
+      } catch (err) {
+        console.error("Failed to fetch project tasks:", err);
+      } finally {
+        setLoadingTasks(false);
+      }
+    };
+
+    fetchTasks();
+  }, [projectId]);
+
+  const onDragEnd = async (result) => {
     const { destination, source, draggableId } = result;
 
     if (!destination) return;
     if (destination.droppableId === source.droppableId && destination.index === source.index) return;
 
-    const taskIndex = boardTasks.findIndex(t => t.id === draggableId);
-    const newTasks = [...boardTasks];
-    newTasks[taskIndex].status = destination.droppableId;
+    // Optimistic UI update
+    const taskIndex = boardTasks.findIndex(t => t._id === draggableId);
+    if (taskIndex === -1) return;
+
+    const newStatus = destination.droppableId;
     
+    // Copy array and update local status
+    const newTasks = [...boardTasks];
+    const updatedTask = { ...newTasks[taskIndex], status: newStatus };
+    newTasks[taskIndex] = updatedTask;
     setBoardTasks(newTasks);
+
+    // Persist to backend
+    try {
+      await api.patch(`/tasks/${draggableId}/status`, { status: newStatus });
+    } catch (err) {
+      console.error("Failed to update status on server", err);
+      // Revert on failure (simplified - normally you'd refetch or store previous state)
+    }
   };
 
-  const projectMembers = project.members.map(id => users.find(u => u.id === id)).filter(Boolean);
+  if (projectsLoading || loadingTasks) {
+    return (
+      <DashboardLayout>
+        <div className="flex h-[80vh] items-center justify-center">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  if (!project) {
+    return (
+      <DashboardLayout>
+        <div className="flex flex-col h-[80vh] items-center justify-center text-center">
+          <h2 className="text-xl font-bold mb-2">Project not found</h2>
+          <p className="text-foreground/50">This project may have been deleted or you don't have access.</p>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  const projectMembers = Array.isArray(project.members) ? project.members : [];
 
   return (
     <DashboardLayout>
@@ -46,7 +103,7 @@ export default function ProjectBoardPage({ params }) {
         <div>
           <h1 className="text-2xl font-bold flex items-center">
             {project.name}
-            <Badge variant="primary" className="ml-3">{project.status}</Badge>
+            <Badge variant="primary" className="ml-3">{project.status || 'Active'}</Badge>
           </h1>
           <p className="text-foreground/60 text-sm mt-1">{project.description}</p>
         </div>
@@ -54,7 +111,7 @@ export default function ProjectBoardPage({ params }) {
         <div className="flex items-center gap-3">
           <div className="flex -space-x-2 mr-2">
             {projectMembers.map((member, i) => (
-              <Avatar key={member.id} src={member.avatar} size="sm" className={`border-2 border-background relative z-[${10-i}]`} />
+              <Avatar key={member._id} src={member.avatar} size="sm" className={`border-2 border-background relative z-[${10-i}]`} title={member.name} />
             ))}
           </div>
           <Button variant="outline" size="sm"><Users className="w-4 h-4 mr-2" /> Share</Button>
@@ -63,10 +120,10 @@ export default function ProjectBoardPage({ params }) {
       </div>
 
       {/* Board Area */}
-      <div className="flex-1 overflow-x-auto pb-4">
+      <div className="flex-1 overflow-x-auto pb-4 hide-scrollbar">
         <DragDropContext onDragEnd={onDragEnd}>
           <div className="flex gap-6 items-start h-full min-h-150">
-            {columns.map(column => {
+            {initialColumns.map(column => {
               const columnTasks = boardTasks.filter(t => t.status === column);
               return (
                 <div key={column} className="w-80 shrink-0 bg-foreground/5 rounded-2xl flex flex-col max-h-full">
@@ -80,10 +137,10 @@ export default function ProjectBoardPage({ params }) {
                       <div 
                         {...provided.droppableProps} 
                         ref={provided.innerRef}
-                        className={`flex-1 p-3 overflow-y-auto space-y-3 min-h-37.5 transition-colors ${snapshot.isDraggingOver ? 'bg-primary/5' : ''}`}
+                        className={`flex-1 p-3 overflow-y-auto space-y-3 min-h-37.5 transition-colors ${snapshot.isDraggingOver ? 'bg-primary/5 rounded-xl' : ''}`}
                       >
                         {columnTasks.map((task, index) => (
-                          <Draggable key={task.id} draggableId={task.id} index={index}>
+                          <Draggable key={task._id} draggableId={task._id} index={index}>
                             {(provided, snapshot) => (
                               <div
                                 ref={provided.innerRef}
@@ -122,39 +179,11 @@ export default function ProjectBoardPage({ params }) {
         </DragDropContext>
       </div>
 
-      {/* Task Details Modal */}
-      <Modal isOpen={!!selectedTask} onClose={() => setSelectedTask(null)} title={selectedTask?.title || 'Task Details'}>
-        {selectedTask && (
-          <div className="space-y-6">
-            <div className="flex gap-4 mb-6">
-              <div className="flex-1">
-                <p className="text-sm text-foreground/50 mb-1">Status</p>
-                <Badge>{selectedTask.status}</Badge>
-              </div>
-              <div className="flex-1">
-                <p className="text-sm text-foreground/50 mb-1">Priority</p>
-                <Badge variant={selectedTask.priority === 'High' ? 'danger' : selectedTask.priority === 'Medium' ? 'warning' : 'default'}>{selectedTask.priority}</Badge>
-              </div>
-              <div className="flex-1">
-                <p className="text-sm text-foreground/50 mb-1">Due Date</p>
-                <p className="text-sm font-medium">{selectedTask.dueDate}</p>
-              </div>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-2">Description</h3>
-              <p className="text-sm text-foreground/80 leading-relaxed bg-foreground/5 p-4 rounded-xl">
-                {selectedTask.description || 'No description provided.'}
-              </p>
-            </div>
-
-            <div>
-              <h3 className="font-semibold mb-3">Activity & Comments</h3>
-              <CommentBox comments={[]} />
-            </div>
-          </div>
-        )}
-      </Modal>
+      <TaskDrawer 
+        isOpen={!!selectedTask}
+        onClose={() => setSelectedTask(null)}
+        task={selectedTask}
+      />
     </DashboardLayout>
   );
 }
