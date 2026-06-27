@@ -6,18 +6,20 @@ import DashboardLayout from '@/components/layout/DashboardLayout';
 import { DragDropContext, Droppable, Draggable } from '@hello-pangea/dnd';
 import TaskCard from '@/components/TaskCard';
 import Button from '@/components/ui/Button';
-import { Plus, Settings2, Users, Loader2 } from 'lucide-react';
+import { Plus, Settings2, Users, Loader2, Video } from 'lucide-react';
 import Avatar from '@/components/ui/Avatar';
 import Badge from '@/components/ui/Badge';
 import TaskDrawer from '@/components/modals/TaskDrawer';
 import { useProjects } from '@/context/ProjectContext';
 import api from '@/lib/api';
+import { useRouter } from 'next/navigation';
 
 const initialColumns = ['To Do', 'In Progress', 'Review', 'Completed'];
 
 export default function ProjectBoardPage() {
   const { id: projectId } = useParams();
   const { projects, loading: projectsLoading } = useProjects();
+  const router = useRouter();
   
   const [boardTasks, setBoardTasks] = useState([]);
   const [loadingTasks, setLoadingTasks] = useState(true);
@@ -114,6 +116,17 @@ export default function ProjectBoardPage() {
               <Avatar key={member._id} src={member.avatar} size="sm" className={`border-2 border-background relative z-[${10-i}]`} title={member.name} />
             ))}
           </div>
+          <button
+            onClick={async () => {
+              try {
+                const res = await api.post('/meetings', { title: `${project.name} Meeting`, projectId });
+                if (res.data.success) router.push(`/meetings/${res.data.data.roomId}`);
+              } catch(e) {}
+            }}
+            className="flex items-center gap-1.5 px-3 py-1.5 bg-primary/10 text-primary text-sm font-medium rounded-xl hover:bg-primary/20 transition-colors"
+          >
+            <Video className="w-4 h-4" /> Start Meeting
+          </button>
           <Button variant="outline" size="sm"><Users className="w-4 h-4 mr-2" /> Share</Button>
           <Button variant="outline" size="sm"><Settings2 className="w-4 h-4" /></Button>
         </div>

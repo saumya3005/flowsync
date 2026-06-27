@@ -16,6 +16,7 @@ const projectRoutes = require('./routes/projectRoutes');
 const taskRoutes = require('./routes/taskRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const notificationRoutes = require('./routes/notificationRoutes');
+const meetingRoutes = require('./routes/meetingRoutes');
 
 // Connect to MongoDB
 connectDB();
@@ -59,6 +60,7 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/tasks', taskRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/meetings', meetingRoutes);
 
 // Error middleware
 app.use(notFound);
@@ -126,6 +128,31 @@ io.on('connection', (socket) => {
   // Notification events
   socket.on('notificationCreated', (data) => {
     io.to(`user:${data.userId}`).emit('notificationCreated', data);
+  });
+
+  // ====== WebRTC Meeting Signaling ======
+  socket.on('join-room', ({ roomId, userId, userName }) => {
+    socket.join(roomId);
+    // Notify other users in the room
+    socket.to(roomId).emit('user-joined', { userId, userName, socketId: socket.id });
+    console.log(`User ${userName} joined room ${roomId}`);
+  });
+
+  socket.on('offer', ({ roomId, offer, to }) => {
+    socket.to(to).emit('offer', { offer, from: socket.id });
+  });
+
+  socket.on('answer', ({ answer, to }) => {
+    socket.to(to).emit('answer', { answer, from: socket.id });
+  });
+
+  socket.on('ice-candidate', ({ candidate, to }) => {
+    socket.to(to).emit('ice-candidate', { candidate, from: socket.id });
+  });
+
+  socket.on('leave-room', ({ roomId }) => {
+    socket.to(roomId).emit('user-left', { socketId: socket.id });
+    socket.leave(roomId);
   });
 });
 

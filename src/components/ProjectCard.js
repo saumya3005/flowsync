@@ -47,7 +47,7 @@ export default function ProjectCard({ project, index = 0, onEdit, onDelete }) {
       <div className="flex justify-between items-start mb-4">
         <div>
           <h3 className="font-semibold text-lg mb-1 group-hover:text-primary transition-colors">
-            <Link href={`/projects/${project._id}/board`}>{project.name}</Link>
+            <Link href={`/projects/${project._id}/board`}>{project.title || project.name}</Link>
           </h3>
           <Badge variant={statusColors[project.status] || 'default'}>{project.status || 'Active'}</Badge>
         </div>

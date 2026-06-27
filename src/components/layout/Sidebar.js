@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FolderKanban, CheckSquare, Users, Bell, Settings, LogOut, Hexagon } from 'lucide-react';
+import { LayoutDashboard, FolderKanban, CheckSquare, Users, Bell, Settings, LogOut, Hexagon, Video } from 'lucide-react';
 import { cn } from '@/utils/cn';
 import { useAuth } from '@/context/AuthContext';
 
@@ -10,6 +10,7 @@ const navItems = [
   { name: 'Dashboard', href: '/dashboard', icon: LayoutDashboard },
   { name: 'Projects', href: '/projects', icon: FolderKanban },
   { name: 'My Tasks', href: '/tasks', icon: CheckSquare },
+  { name: 'Meetings', href: '/meetings', icon: Video },
   { name: 'Team', href: '/team', icon: Users },
   { name: 'Notifications', href: '/notifications', icon: Bell },
   { name: 'Settings', href: '/settings', icon: Settings },

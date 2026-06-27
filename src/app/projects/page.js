@@ -23,7 +23,7 @@ export default function ProjectsPage() {
   // Derive filtered projects
   const filteredProjects = projects.filter(p => {
     const matchesFilter = filter === 'All' || p.status === filter;
-    const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase()) || 
+    const matchesSearch = (p.title || p.name || '').toLowerCase().includes(search.toLowerCase()) || 
                           (p.description && p.description.toLowerCase().includes(search.toLowerCase()));
     return matchesFilter && matchesSearch;
   });

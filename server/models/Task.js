@@ -30,22 +30,21 @@ const taskSchema = new mongoose.Schema(
     },
     priority: {
       type: String,
-      enum: ['Low', 'Medium', 'High'],
+      enum: ['Low', 'Medium', 'High', 'Critical'],
       default: 'Medium',
     },
     dueDate: {
       type: Date,
     },
-    labels: [
+    labels: [{ type: String }],
+    attachments: [{ type: String }],
+    subtasks: [
       {
-        type: String,
-      },
+        title: { type: String, required: true },
+        completed: { type: Boolean, default: false },
+      }
     ],
-    attachments: [
-      {
-        type: String,
-      },
-    ],
+    comments: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Comment' }],
   },
   {
     timestamps: true,

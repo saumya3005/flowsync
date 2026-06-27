@@ -2,47 +2,41 @@ const Comment = require('../models/Comment');
 const Task = require('../models/Task');
 
 // @desc    Add a comment to a task
-// @route   POST /api/comments/:taskId
+// @route   POST /api/comments
 // @access  Private
 const addComment = async (req, res, next) => {
   try {
-    const { text } = req.body;
-    const { taskId } = req.params;
+    const { taskId, content } = req.body;
 
-    if (!text) {
-      return res.status(400).json({ success: false, message: 'Please provide comment text' });
+    if (!content || !taskId) {
+      return res.status(400).json({ success: false, message: 'Please provide taskId and content' });
     }
 
     const task = await Task.findById(taskId);
-
-    if (!task) {
-      return res.status(404).json({ success: false, message: 'Task not found' });
-    }
+    if (!task) return res.status(404).json({ success: false, message: 'Task not found' });
 
     const comment = await Comment.create({
       task: taskId,
-      user: req.user._id,
-      text,
+      author: req.user._id,
+      content,
     });
 
-    const populatedComment = await Comment.findById(comment._id).populate('user', 'name avatar');
-
-    res.status(201).json({ success: true, message: 'Comment added successfully', data: populatedComment });
+    const populated = await Comment.findById(comment._id).populate('author', 'name avatar');
+    res.status(201).json({ success: true, message: 'Comment added', data: populated });
   } catch (error) {
     next(error);
   }
 };
 
 // @desc    Get comments for a task
-// @route   GET /api/comments/:taskId
+// @route   GET /api/comments/task/:taskId
 // @access  Private
 const getCommentsByTask = async (req, res, next) => {
   try {
     const comments = await Comment.find({ task: req.params.taskId })
-      .populate('user', 'name avatar')
+      .populate('author', 'name avatar')
       .sort({ createdAt: 1 });
-
-    res.status(200).json({ success: true, message: 'Comments fetched successfully', data: comments });
+    res.status(200).json({ success: true, data: comments });
   } catch (error) {
     next(error);
   }
@@ -54,25 +48,17 @@ const getCommentsByTask = async (req, res, next) => {
 const deleteComment = async (req, res, next) => {
   try {
     const comment = await Comment.findById(req.params.id);
+    if (!comment) return res.status(404).json({ success: false, message: 'Comment not found' });
 
-    if (!comment) {
-      return res.status(404).json({ success: false, message: 'Comment not found' });
-    }
-
-    if (comment.user.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ success: false, message: 'Not authorized to delete this comment' });
+    if (comment.author.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: 'Not authorized' });
     }
 
     await Comment.deleteOne({ _id: comment._id });
-
     res.status(200).json({ success: true, message: 'Comment removed' });
   } catch (error) {
     next(error);
   }
 };
 
-module.exports = {
-  addComment,
-  getCommentsByTask,
-  deleteComment,
-};
+module.exports = { addComment, getCommentsByTask, deleteComment };

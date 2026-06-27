@@ -51,14 +51,27 @@ export const updateTaskStatus = (id, status) => API.patch(`/tasks/${id}/status`,
 
 // ─── Comment APIs ─────────────────────────────────────────────────────────────
 
-export const addComment = (taskId, text) => API.post(`/comments/${taskId}`, { text });
-export const getCommentsByTask = (taskId) => API.get(`/comments/${taskId}`);
+export const addComment = (taskId, content) => API.post('/comments', { taskId, content });
+export const getCommentsByTask = (taskId) => API.get(`/comments/task/${taskId}`);
 export const deleteComment = (id) => API.delete(`/comments/${id}`);
 
 // ─── Notification APIs ────────────────────────────────────────────────────────
 
 export const getNotifications = () => API.get('/notifications');
 export const markNotificationAsRead = (id) => API.patch(`/notifications/${id}/read`);
-export const markAllNotificationsAsRead = () => API.patch('/notifications/read-all');
+export const markAllNotificationsAsRead = () => API.put('/notifications/mark-read');
+
+// ─── User APIs (extended) ─────────────────────────────────────────────────────
+
+export const updateAvatar = (avatar) => API.put('/users/avatar', { avatar });
+export const updatePassword = (data) => API.put('/users/password', data);
+export const updatePreferences = (data) => API.put('/users/preferences', data);
+
+// ─── Meeting APIs ─────────────────────────────────────────────────────────────
+
+export const createMeeting = (data) => API.post('/meetings', data);
+export const getMeetings = () => API.get('/meetings');
+export const getMeetingByRoomId = (roomId) => API.get(`/meetings/${roomId}`);
+export const joinMeeting = (roomId) => API.post(`/meetings/${roomId}/join`);
 
 export default API;

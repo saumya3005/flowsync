@@ -29,6 +29,16 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    preferences: {
+      emailNotifications: { type: Boolean, default: true },
+      taskReminders: { type: Boolean, default: true },
+      projectUpdates: { type: Boolean, default: true },
+      commentAlerts: { type: Boolean, default: true },
+    },
+    theme: {
+      mode: { type: String, default: 'light' },
+      accent: { type: String, default: '#635BFF' },
+    }
   },
   {
     timestamps: true,

@@ -154,6 +154,40 @@ const addMember = async (req, res, next) => {
   }
 };
 
+// @desc    Remove member from project
+// @route   DELETE /api/projects/:id/members/:userId
+// @access  Private
+const removeMember = async (req, res, next) => {
+  try {
+    const project = await Project.findById(req.params.id);
+
+    if (!project) {
+      return res.status(404).json({ success: false, message: 'Project not found' });
+    }
+
+    if (project.owner.toString() !== req.user._id.toString()) {
+      return res.status(403).json({ success: false, message: 'Only project owner can remove members' });
+    }
+
+    const { userId } = req.params;
+
+    if (userId === project.owner.toString()) {
+      return res.status(400).json({ success: false, message: 'Cannot remove project owner' });
+    }
+
+    project.members = project.members.filter(m => m.toString() !== userId);
+    await project.save();
+
+    const updated = await Project.findById(project._id)
+      .populate('members', 'name avatar email')
+      .populate('owner', 'name avatar');
+
+    res.status(200).json({ success: true, message: 'Member removed', data: updated });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createProject,
   getProjects,
@@ -161,4 +195,5 @@ module.exports = {
   updateProject,
   deleteProject,
   addMember,
+  removeMember,
 };
