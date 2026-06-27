@@ -25,40 +25,32 @@ const app = express();
 const server = http.createServer(app);
 
 // Socket.io setup
-// CORS setup
-const allowedOrigins = process.env.CLIENT_URL
-  ? process.env.CLIENT_URL.split(",").map((url) => url.trim())
-  : ["http://localhost:3000"];
-
-const isAllowedOrigin = (origin) => {
-  if (!origin) return true;
-
-  return (
-    allowedOrigins.includes(origin) ||
-    origin.endsWith(".vercel.app") ||
-    origin.includes("localhost")
-  );
-};
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://flowsync-peach-five.vercel.app",
+];
 
 const corsOptions = {
   origin: function (origin, callback) {
-    if (isAllowedOrigin(origin)) {
+    if (!origin || origin.endsWith(".vercel.app") || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error(`Not allowed by CORS: ${origin}`));
+      callback(new Error("Not allowed by CORS: " + origin));
     }
   },
   credentials: true,
 };
 
-// Socket.io setup
+app.use(cors(corsOptions));
+app.options(/.*/, cors(corsOptions));
+
 const io = new Server(server, {
   cors: {
     origin: function (origin, callback) {
-      if (isAllowedOrigin(origin)) {
+      if (!origin || origin.endsWith(".vercel.app") || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
-        callback(new Error(`Socket CORS blocked: ${origin}`));
+        callback(new Error("Socket CORS blocked: " + origin));
       }
     },
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
