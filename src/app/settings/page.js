@@ -15,7 +15,7 @@ export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState('Profile');
   
   // Profile State
-  const [profileData, setProfileData] = useState({ name: '', email: '', role: '' });
+  const [profileData, setProfileData] = useState({ name: '', email: '', role: '', phone: '' });
   const [avatarPreview, setAvatarPreview] = useState(null);
   
   // Security State
@@ -34,7 +34,7 @@ export default function SettingsPage() {
 
   useEffect(() => {
     if (user) {
-      setProfileData({ name: user.name || '', email: user.email || '', role: user.role || '' });
+      setProfileData({ name: user.name || '', email: user.email || '', role: user.role || '', phone: user.phone || '' });
       setAvatarPreview(user.avatar || null);
       if (user.preferences) setPreferences(user.preferences);
       if (user.theme) setTheme(user.theme);
@@ -214,6 +214,10 @@ export default function SettingsPage() {
                   <div>
                     <label className="block text-sm font-medium mb-1.5 text-foreground/80">Role / Job Title</label>
                     <Input value={profileData.role} onChange={(e) => setProfileData({...profileData, role: e.target.value})} />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium mb-1.5 text-foreground/80">Phone Number</label>
+                    <Input type="tel" placeholder="+1234567890" value={profileData.phone} onChange={(e) => setProfileData({...profileData, phone: e.target.value})} />
                   </div>
                 </div>
               </div>

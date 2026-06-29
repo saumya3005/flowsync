@@ -5,6 +5,7 @@ import { X } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Button from '@/components/ui/Button';
 import Input from '@/components/ui/Input';
+import Link from 'next/link';
 import { useProjects } from '@/context/ProjectContext';
 import api from '@/lib/api';
 
@@ -77,6 +78,14 @@ export default function TaskModal({ isOpen, onClose, onSubmit, initialData = nul
               </button>
             </div>
 
+            {projects.length === 0 ? (
+              <div className="p-8 text-center text-foreground/60 text-sm">
+                <p className="mb-4">You must create a project first before creating a task.</p>
+                <Link href="/projects" onClick={onClose} className="px-4 py-2 bg-primary text-white rounded-xl text-sm font-medium hover:bg-primary/90 transition-colors">
+                  Go to Projects
+                </Link>
+              </div>
+            ) : (
             <form onSubmit={handleSubmit} className="p-5 space-y-4 max-h-[75vh] overflow-y-auto">
               <div>
                 <label className="block text-xs font-medium mb-1 text-foreground/70">Title *</label>
@@ -98,7 +107,7 @@ export default function TaskModal({ isOpen, onClose, onSubmit, initialData = nul
                   <label className="block text-xs font-medium mb-1 text-foreground/70">Project *</label>
                   <select className={inputClass} value={form.projectId} onChange={e => setForm({...form, projectId: e.target.value})} required>
                     <option value="">Select project</option>
-                    {projects.map(p => <option key={p._id} value={p._id}>{p.name}</option>)}
+                    {projects.map(p => <option key={p._id} value={p._id}>{p.title}</option>)}
                   </select>
                 </div>
                 <div>
@@ -140,6 +149,7 @@ export default function TaskModal({ isOpen, onClose, onSubmit, initialData = nul
                 <Button type="submit">Save Task</Button>
               </div>
             </form>
+            )}
           </motion.div>
         </>
       )}

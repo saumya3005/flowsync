@@ -84,6 +84,8 @@ app.use('/api/tasks', taskRoutes);
 app.use('/api/comments', commentRoutes);
 app.use('/api/notifications', notificationRoutes);
 app.use('/api/meetings', meetingRoutes);
+app.use('/api/invitations', require('./routes/invitationRoutes'));
+app.use('/api/activities', require('./routes/activityRoutes'));
 
 // Error middleware
 app.use(notFound);

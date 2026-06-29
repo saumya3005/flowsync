@@ -1,5 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+
 const {
   createTask,
   getTasks,
@@ -8,12 +9,28 @@ const {
   updateTask,
   deleteTask,
   updateTaskStatus,
-} = require('../controllers/taskController');
-const { protect } = require('../middleware/authMiddleware');
+  addChecklistItem,
+  updateChecklistItem,
+} = require("../controllers/taskController");
 
-router.route('/').post(protect, createTask).get(protect, getTasks);
-router.route('/project/:projectId').get(protect, getTasksByProject);
-router.route('/:id').get(protect, getTaskById).put(protect, updateTask).delete(protect, deleteTask);
-router.route('/:id/status').patch(protect, updateTaskStatus);
+const { protect } = require("../middleware/authMiddleware");
+
+// IMPORTANT: specific routes before param routes to avoid /:id swallowing them
+router.get("/project/:projectId", protect, getTasksByProject);
+
+router.route("/")
+  .post(protect, createTask)
+  .get(protect, getTasks);
+
+router.route("/:id")
+  .get(protect, getTaskById)
+  .put(protect, updateTask)
+  .delete(protect, deleteTask);
+
+router.patch("/:id/status", protect, updateTaskStatus);
+
+router.post("/:id/checklist", protect, addChecklistItem);
+
+router.patch("/:id/checklist/:itemId", protect, updateChecklistItem);
 
 module.exports = router;

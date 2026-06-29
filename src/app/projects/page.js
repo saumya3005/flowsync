@@ -43,7 +43,9 @@ export default function ProjectsPage() {
   };
 
   const handleDelete = async (projectId) => {
-    if (confirm("Are you sure you want to delete this project? This cannot be undone.")) {
+    const project = projects.find(p => p._id === projectId);
+    const projectTitle = project?.title || 'this project';
+    if (confirm(`Delete "${projectTitle}"? This cannot be undone.`)) {
       try {
         const res = await api.delete(`/projects/${projectId}`);
         if (res.data.success) {
@@ -60,12 +62,16 @@ export default function ProjectsPage() {
       if (modalMode === 'create') {
         const res = await api.post('/projects', formData);
         if (res.data.success) {
-          addProject(res.data.data);
+          // Re-fetch populated project (with members.user)
+          const populated = await api.get(`/projects/${res.data.data._id}`);
+          addProject(populated.data.data);
         }
       } else {
         const res = await api.put(`/projects/${selectedProject._id}`, formData);
         if (res.data.success) {
-          updateProjectInState(res.data.data);
+          // Re-fetch populated project
+          const populated = await api.get(`/projects/${selectedProject._id}`);
+          updateProjectInState(populated.data.data);
         }
       }
       setIsModalOpen(false);

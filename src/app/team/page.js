@@ -6,10 +6,12 @@ import Button from '@/components/ui/Button';
 import Avatar from '@/components/ui/Avatar';
 import { Mail, MoreHorizontal, UserPlus, Loader2 } from 'lucide-react';
 import api from '@/lib/api';
+import InviteModal from '@/components/modals/InviteModal';
 
 export default function TeamPage() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   useEffect(() => {
     const fetchUsers = async () => {
@@ -40,7 +42,9 @@ export default function TeamPage() {
           <h1 className="text-2xl font-bold">Team Members</h1>
           <p className="text-foreground/60 text-sm mt-1">Manage your workspace members and their roles.</p>
         </div>
-        <Button><UserPlus className="w-4 h-4 mr-2" /> Invite Member</Button>
+        <Button onClick={() => setIsInviteModalOpen(true)}>
+          <UserPlus className="w-4 h-4 mr-2" /> Invite Member
+        </Button>
       </div>
 
       <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
@@ -109,6 +113,11 @@ export default function TeamPage() {
           )}
         </div>
       </div>
+
+      <InviteModal 
+        isOpen={isInviteModalOpen} 
+        onClose={() => setIsInviteModalOpen(false)} 
+      />
     </DashboardLayout>
   );
 }

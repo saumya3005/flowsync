@@ -74,10 +74,18 @@ export default function TasksPage() {
     try {
       if (modalMode === 'create') {
         const res = await api.post('/tasks', formData);
-        if (res.data.success) { addTask(res.data.data); setIsModalOpen(false); }
+        if (res.data.success) {
+          // Re-fetch with populated fields so project.title renders correctly
+          const populated = await api.get(`/tasks/${res.data.data._id}`);
+          addTask(populated.data.data);
+          setIsModalOpen(false);
+        }
       } else {
         const res = await api.put(`/tasks/${selectedTask._id}`, formData);
-        if (res.data.success) { updateTaskInState(res.data.data); setIsModalOpen(false); }
+        if (res.data.success) {
+          updateTaskInState(res.data.data);
+          setIsModalOpen(false);
+        }
       }
     } catch (err) {
       alert(err.response?.data?.message || 'Something went wrong');
@@ -86,7 +94,7 @@ export default function TasksPage() {
 
   const handleDelete = async (taskId, e) => {
     e.stopPropagation();
-    if (!confirm('Delete this task?')) return;
+
     setDeleting(taskId);
     try {
       const res = await api.delete(`/tasks/${taskId}`);
@@ -125,11 +133,10 @@ export default function TasksPage() {
           <button
             key={status}
             onClick={() => setStatusFilter(statusFilter === status ? 'All' : status)}
-            className={`p-4 rounded-2xl border text-left transition-all ${
-              statusFilter === status
-                ? 'border-primary bg-primary/5 shadow-sm'
-                : 'bg-card border-border hover:border-primary/30'
-            }`}
+            className={`p-4 rounded-2xl border text-left transition-all ${statusFilter === status
+              ? 'border-primary bg-primary/5 shadow-sm'
+              : 'bg-card border-border hover:border-primary/30'
+              }`}
           >
             <div className="flex items-center gap-2 mb-1">
               {STATUS_ICONS[status]}
@@ -157,9 +164,8 @@ export default function TasksPage() {
             <button
               key={p}
               onClick={() => setPriorityFilter(p)}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${
-                priorityFilter === p ? 'bg-primary text-white' : 'text-foreground/70 hover:bg-foreground/5'
-              }`}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-colors ${priorityFilter === p ? 'bg-primary text-white' : 'text-foreground/70 hover:bg-foreground/5'
+                }`}
             >
               {p}
             </button>
@@ -229,8 +235,8 @@ export default function TasksPage() {
                   <p className={`font-medium text-sm truncate ${task.status === 'Completed' ? 'line-through text-foreground/40' : ''}`}>
                     {task.title}
                   </p>
-                  {task.project?.name && (
-                    <p className="text-xs text-foreground/50 mt-0.5 truncate">{task.project.name}</p>
+                  {task.project?.title && (
+                    <p className="text-xs text-foreground/50 mt-0.5 truncate">{task.project.title}</p>
                   )}
                 </div>
 
@@ -250,10 +256,9 @@ export default function TasksPage() {
 
                 {/* Due date */}
                 {task.dueDate && (
-                  <span className={`hidden md:block text-xs font-medium shrink-0 ${
-                    new Date(task.dueDate) < new Date() && task.status !== 'Completed'
-                      ? 'text-red-500' : 'text-foreground/50'
-                  }`}>
+                  <span className={`hidden md:block text-xs font-medium shrink-0 ${new Date(task.dueDate) < new Date() && task.status !== 'Completed'
+                    ? 'text-red-500' : 'text-foreground/50'
+                    }`}>
                     {new Date(task.dueDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                   </span>
                 )}

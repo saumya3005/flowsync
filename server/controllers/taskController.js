@@ -18,6 +18,12 @@ const createTask = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Project not found' });
     }
 
+    const isMember = project.members.some(m => m.user.toString() === req.user._id.toString());
+    const isOwner = project.owner.toString() === req.user._id.toString();
+    if (!isMember && !isOwner) {
+      return res.status(403).json({ success: false, message: 'Not authorized to add task to this project' });
+    }
+
     const task = await Task.create({
       title,
       description,
@@ -40,10 +46,19 @@ const createTask = async (req, res, next) => {
 // @access  Private
 const getTasks = async (req, res, next) => {
   try {
-    // Basic implementation: get tasks where user is assigned or created
+    // get tasks where user is assigned, created, or is a member of the project
+    const projects = await Project.find({
+      $or: [{ owner: req.user._id }, { 'members.user': req.user._id }],
+    }).select('_id');
+    const projectIds = projects.map(p => p._id);
+
     const tasks = await Task.find({
-      $or: [{ assignedTo: req.user._id }, { createdBy: req.user._id }],
-    }).populate('project', 'title').populate('assignedTo', 'name avatar');
+      $or: [
+        { assignedTo: req.user._id },
+        { createdBy: req.user._id },
+        { project: { $in: projectIds } }
+      ],
+    }).populate('project', 'title owner members').populate('assignedTo', 'name avatar');
 
     res.status(200).json({ success: true, message: 'Tasks fetched successfully', data: tasks });
   } catch (error) {
@@ -98,18 +113,26 @@ const updateTask = async (req, res, next) => {
     }
 
     // Check auth
+    const isMember = task.project.members.some(m => m.user.toString() === req.user._id.toString());
     const isOwner = task.project.owner.toString() === req.user._id.toString();
     const isAssignee = task.assignedTo && task.assignedTo.toString() === req.user._id.toString();
     const isCreator = task.createdBy.toString() === req.user._id.toString();
 
-    if (!isOwner && !isAssignee && !isCreator) {
+    if (!isOwner && !isAssignee && !isCreator && !isMember) {
       return res.status(403).json({ success: false, message: 'Not authorized to update this task' });
     }
 
-    const updatedTask = await Task.findByIdAndUpdate(req.params.id, req.body, {
+    const allowedFields = ['title', 'description', 'assignedTo', 'status', 'priority', 'dueDate', 'labels', 'subtasks'];
+    const updateData = {};
+    allowedFields.forEach(f => { if (req.body[f] !== undefined) updateData[f] = req.body[f]; });
+
+    const updatedTask = await Task.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
       runValidators: true,
-    });
+    })
+      .populate('project', 'title owner members')
+      .populate('assignedTo', 'name avatar')
+      .populate('createdBy', 'name avatar');
 
     res.status(200).json({ success: true, message: 'Task updated successfully', data: updatedTask });
   } catch (error) {
@@ -122,27 +145,55 @@ const updateTask = async (req, res, next) => {
 // @access  Private
 const deleteTask = async (req, res, next) => {
   try {
-    const task = await Task.findById(req.params.id).populate('project');
+    const task = await Task.findById(req.params.id).populate({
+      path: "project",
+      select: "owner members",
+    });
 
     if (!task) {
-      return res.status(404).json({ success: false, message: 'Task not found' });
+      return res.status(404).json({
+        success: false,
+        message: "Task not found",
+      });
     }
 
-    const isOwner = task.project.owner.toString() === req.user._id.toString();
-    const isCreator = task.createdBy.toString() === req.user._id.toString();
+    if (!task.project) {
+      return res.status(404).json({
+        success: false,
+        message: "Task project not found",
+      });
+    }
 
-    if (!isOwner && !isCreator) {
-      return res.status(403).json({ success: false, message: 'Not authorized to delete this task' });
+    const userId = req.user._id.toString();
+
+    const isOwner = task.project.owner?.toString() === userId;
+    const isCreator = task.createdBy?.toString() === userId;
+    const isAssignee = task.assignedTo?.toString() === userId;
+
+    const isProjectMember = task.project.members?.some((member) => {
+      const memberId = member.user?._id?.toString() || member.user?.toString();
+      return memberId === userId;
+    });
+
+    if (!isOwner && !isCreator && !isAssignee && !isProjectMember) {
+      return res.status(403).json({
+        success: false,
+        message: "Not authorized to delete this task",
+      });
     }
 
     await Task.deleteOne({ _id: task._id });
 
-    res.status(200).json({ success: true, message: 'Task removed' });
+    res.status(200).json({
+      success: true,
+      message: "Task deleted successfully",
+      data: { _id: task._id },
+    });
   } catch (error) {
+    console.error("Delete task error:", error);
     next(error);
   }
 };
-
 // @desc    Update task status
 // @route   PATCH /api/tasks/:id/status
 // @access  Private
@@ -168,6 +219,59 @@ const updateTaskStatus = async (req, res, next) => {
   }
 };
 
+// @desc    Add checklist item
+// @route   POST /api/tasks/:id/checklist
+// @access  Private
+const addChecklistItem = async (req, res, next) => {
+  try {
+    const { title } = req.body;
+    const task = await Task.findById(req.params.id);
+
+    if (!task) {
+      return res.status(404).json({ success: false, message: 'Task not found' });
+    }
+
+    if (!title) {
+      return res.status(400).json({ success: false, message: 'Title is required' });
+    }
+
+    task.subtasks.push({ title });
+    await task.save();
+
+    res.status(201).json({ success: true, message: 'Checklist item added', data: task });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Update checklist item
+// @route   PATCH /api/tasks/:id/checklist/:itemId
+// @access  Private
+const updateChecklistItem = async (req, res, next) => {
+  try {
+    const { completed, title } = req.body;
+    const task = await Task.findById(req.params.id);
+
+    if (!task) {
+      return res.status(404).json({ success: false, message: 'Task not found' });
+    }
+
+    const item = task.subtasks.id(req.params.itemId);
+    if (!item) {
+      return res.status(404).json({ success: false, message: 'Checklist item not found' });
+    }
+
+    if (completed !== undefined) item.completed = completed;
+    if (title) item.title = title;
+
+    await task.save();
+
+    res.status(200).json({ success: true, message: 'Checklist item updated', data: task });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   createTask,
   getTasks,
@@ -176,4 +280,6 @@ module.exports = {
   updateTask,
   deleteTask,
   updateTaskStatus,
+  addChecklistItem,
+  updateChecklistItem
 };

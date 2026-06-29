@@ -15,7 +15,7 @@ const createProject = async (req, res, next) => {
       title,
       description,
       owner: req.user._id,
-      members: members || [req.user._id],
+      members: members || [{ user: req.user._id, role: 'Owner' }],
       priority,
       dueDate,
     });
@@ -32,8 +32,8 @@ const createProject = async (req, res, next) => {
 const getProjects = async (req, res, next) => {
   try {
     const projects = await Project.find({
-      $or: [{ owner: req.user._id }, { members: req.user._id }],
-    }).populate('members', 'name avatar email').populate('owner', 'name avatar');
+      $or: [{ owner: req.user._id }, { 'members.user': req.user._id }],
+    }).populate('members.user', 'name avatar email').populate('owner', 'name avatar');
 
     res.status(200).json({ success: true, message: 'Projects fetched successfully', data: projects });
   } catch (error) {
@@ -47,7 +47,7 @@ const getProjects = async (req, res, next) => {
 const getProjectById = async (req, res, next) => {
   try {
     const project = await Project.findById(req.params.id)
-      .populate('members', 'name avatar email role isOnline')
+      .populate('members.user', 'name avatar email role isOnline')
       .populate('owner', 'name avatar email');
 
     if (!project) {
@@ -55,7 +55,7 @@ const getProjectById = async (req, res, next) => {
     }
 
     // Check if user is owner or member
-    const isMember = project.members.some(m => m._id.toString() === req.user._id.toString());
+    const isMember = project.members.some(m => m.user && m.user._id.toString() === req.user._id.toString());
     const isOwner = project.owner._id.toString() === req.user._id.toString();
 
     if (!isMember && !isOwner) {
@@ -87,7 +87,7 @@ const updateProject = async (req, res, next) => {
     project.description = req.body.description || project.description;
     project.status = req.body.status || project.status;
     project.priority = req.body.priority || project.priority;
-    project.dueDate = req.body.dueDate || project.dueDate;
+    if (req.body.dueDate !== undefined) project.dueDate = req.body.dueDate || null;
 
     const updatedProject = await project.save();
 
@@ -114,7 +114,7 @@ const deleteProject = async (req, res, next) => {
 
     await Project.deleteOne({ _id: project._id });
 
-    res.status(200).json({ success: true, message: 'Project removed' });
+    res.status(200).json({ success: true, message: 'Project deleted successfully', data: { _id: project._id } });
   } catch (error) {
     next(error);
   }
@@ -141,11 +141,11 @@ const addMember = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Please provide userId to add' });
     }
 
-    if (project.members.includes(userId)) {
+    if (project.members.some(m => m.user.toString() === userId)) {
       return res.status(400).json({ success: false, message: 'User is already a member' });
     }
 
-    project.members.push(userId);
+    project.members.push({ user: userId, role: req.body.role || 'Viewer' });
     await project.save();
 
     res.status(200).json({ success: true, message: 'Member added successfully', data: project });
@@ -175,11 +175,11 @@ const removeMember = async (req, res, next) => {
       return res.status(400).json({ success: false, message: 'Cannot remove project owner' });
     }
 
-    project.members = project.members.filter(m => m.toString() !== userId);
+    project.members = project.members.filter(m => m.user.toString() !== userId);
     await project.save();
 
     const updated = await Project.findById(project._id)
-      .populate('members', 'name avatar email')
+      .populate('members.user', 'name avatar email')
       .populate('owner', 'name avatar');
 
     res.status(200).json({ success: true, message: 'Member removed', data: updated });

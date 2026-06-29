@@ -21,8 +21,10 @@ export default function ProjectCard({ project, index = 0, onEdit, onDelete }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Members might be populated objects { _id, name, avatar } from backend
-  const projectMembers = Array.isArray(project.members) ? project.members : [];
+  // Members have shape { user: { _id, name, avatar }, role } from backend
+  const projectMembers = Array.isArray(project.members)
+    ? project.members.map(m => (m.user && typeof m.user === 'object' ? m.user : m)).filter(Boolean)
+    : [];
 
   const statusColors = {
     Active: 'primary',

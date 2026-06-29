@@ -126,9 +126,120 @@ const getUserProfile = async (req, res, next) => {
   }
 };
 
+const OTP = require('../models/OTP');
+const { sendEmail } = require('../utils/emailService');
+const { sendSMS } = require('../utils/smsService');
+
+// @desc    Send OTP
+// @route   POST /api/auth/send-otp
+// @access  Public
+const sendOTP = async (req, res, next) => {
+  try {
+    const { identifier } = req.body; // can be email or phone
+
+    if (!identifier) {
+      return res.status(400).json({ success: false, message: 'Please provide email or phone' });
+    }
+
+    const user = await User.findOne({ 
+      $or: [{ email: identifier }, { phone: identifier }]
+    });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Generate 6 digit OTP
+    const otpCode = Math.floor(100000 + Math.random() * 900000).toString();
+
+    // Save to DB (expires in 5 mins based on OTP model schema)
+    await OTP.create({
+      userId: user._id,
+      code: otpCode,
+      expiresAt: new Date(Date.now() + 5 * 60 * 1000), // 5 minutes from now
+    });
+
+    // Send via email or SMS
+    if (identifier.includes('@')) {
+      await sendEmail({
+        to: user.email,
+        subject: 'Your FlowSync Login OTP',
+        text: `Your OTP is: ${otpCode}. It expires in 5 minutes.`,
+      });
+    } else {
+      await sendSMS({
+        to: user.phone || identifier,
+        body: `Your FlowSync OTP is: ${otpCode}. It expires in 5 minutes.`,
+      });
+    }
+
+    res.status(200).json({ success: true, message: 'OTP sent successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Verify OTP and Login
+// @route   POST /api/auth/verify-otp
+// @access  Public
+const verifyOTP = async (req, res, next) => {
+  try {
+    const { identifier, code } = req.body;
+
+    if (!identifier || !code) {
+      return res.status(400).json({ success: false, message: 'Please provide identifier and code' });
+    }
+
+    const user = await User.findOne({ 
+      $or: [{ email: identifier }, { phone: identifier }]
+    });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    // Check OTP
+    const validOtp = await OTP.findOne({
+      userId: user._id,
+      code,
+    });
+
+    if (!validOtp) {
+      return res.status(401).json({ success: false, message: 'Invalid or expired OTP' });
+    }
+
+    // OTP valid, delete it
+    await OTP.deleteOne({ _id: validOtp._id });
+
+    // Login user
+    user.isOnline = true;
+    await user.save();
+    
+    const token = generateToken(res, user._id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Login successful',
+      data: {
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+        avatar: user.avatar,
+        token
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   loginUser,
   registerUser,
   logoutUser,
   getUserProfile,
+  sendOTP,
+  verifyOTP,
 };
