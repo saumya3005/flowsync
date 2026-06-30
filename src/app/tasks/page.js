@@ -96,11 +96,23 @@ export default function TasksPage() {
     e.stopPropagation();
 
     setDeleting(taskId);
+
     try {
       const res = await api.delete(`/tasks/${taskId}`);
-      if (res.data.success) removeTask(taskId);
+
+      if (res.data.success) {
+        removeTask(taskId);
+      }
     } catch (err) {
-      alert('Failed to delete task');
+      console.log("Delete Error:", err.response);
+
+      // Agar backend bole task exist hi nahi karta
+      if (err.response?.status === 404) {
+        removeTask(taskId);
+        return;
+      }
+
+      alert(err.response?.data?.message || "Failed to delete task");
     } finally {
       setDeleting(null);
     }
