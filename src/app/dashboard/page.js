@@ -32,7 +32,9 @@ export default function Dashboard() {
           <p className="text-foreground/60 mt-1">Here's what's happening with your projects today.</p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline">Invite Member</Button>
+          <Link href="/team">
+            <Button variant="outline">Invite Member</Button>
+          </Link>
           <Link href="/projects">
             <Button><Plus className="w-4 h-4 mr-2" /> New Project</Button>
           </Link>
@@ -40,28 +42,28 @@ export default function Dashboard() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <StatsCard 
-          title="Total Projects" 
-          value={projectsLoading ? '-' : projects.length} 
-          trend="neutral" 
+        <StatsCard
+          title="Total Projects"
+          value={projectsLoading ? '-' : projects.length}
+          trend="neutral"
           loading={projectsLoading}
         />
-        <StatsCard 
-          title="Active Tasks" 
-          value={tasksLoading ? '-' : tasks.length - completedTasks} 
-          trend="up" 
+        <StatsCard
+          title="Active Tasks"
+          value={tasksLoading ? '-' : tasks.length - completedTasks}
+          trend="up"
           loading={tasksLoading}
         />
-        <StatsCard 
-          title="Tasks Completed" 
-          value={tasksLoading ? '-' : completedTasks} 
-          trend="up" 
+        <StatsCard
+          title="Tasks Completed"
+          value={tasksLoading ? '-' : completedTasks}
+          trend="up"
           loading={tasksLoading}
         />
-        <StatsCard 
-          title="Overdue Tasks" 
-          value={tasksLoading ? '-' : overdueTasks} 
-          trend={overdueTasks > 0 ? 'down' : 'neutral'} 
+        <StatsCard
+          title="Overdue Tasks"
+          value={tasksLoading ? '-' : overdueTasks}
+          trend={overdueTasks > 0 ? 'down' : 'neutral'}
           loading={tasksLoading}
         />
       </div>
@@ -73,7 +75,7 @@ export default function Dashboard() {
             <h2 className="text-xl font-semibold">Recent Projects</h2>
             <Link href="/projects" className="text-sm text-primary hover:underline">View all</Link>
           </div>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {projectsLoading ? (
               Array.from({ length: 4 }).map((_, i) => <SkeletonCard key={i} />)
@@ -98,7 +100,7 @@ export default function Dashboard() {
             <h2 className="text-xl font-semibold">My Tasks</h2>
             <Link href="/tasks" className="text-sm text-primary hover:underline">View all</Link>
           </div>
-          
+
           <div className="bg-card border border-border rounded-2xl p-4 flex flex-col gap-3 h-full max-h-125 overflow-y-auto">
             {tasksLoading ? (
               Array.from({ length: 4 }).map((_, i) => <SkeletonTask key={i} />)
@@ -124,7 +126,7 @@ function StatsCard({ title, value, change, trend = 'neutral', loading }) {
   if (trend === 'down') changeClass = 'bg-coral/10 text-coral';
 
   return (
-    <motion.div 
+    <motion.div
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       className="glass-card p-6 rounded-2xl border border-border/50 flex flex-col justify-between h-32"
@@ -133,7 +135,7 @@ function StatsCard({ title, value, change, trend = 'neutral', loading }) {
         <h3 className="text-sm font-medium text-foreground/60">{title}</h3>
         <MoreHorizontal className="w-4 h-4 text-foreground/30" />
       </div>
-      
+
       <div className="flex items-baseline gap-3">
         {loading ? (
           <div className="h-10 w-16 bg-foreground/5 animate-pulse rounded-lg"></div>
