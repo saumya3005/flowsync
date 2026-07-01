@@ -1,5 +1,6 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
+
 const {
   createProject,
   getProjects,
@@ -7,13 +8,24 @@ const {
   updateProject,
   deleteProject,
   addMember,
+  inviteMember,
   removeMember,
-} = require('../controllers/projectController');
-const { protect } = require('../middleware/authMiddleware');
+} = require("../controllers/projectController");
 
-router.route('/').post(protect, createProject).get(protect, getProjects);
-router.route('/:id').get(protect, getProjectById).put(protect, updateProject).delete(protect, deleteProject);
-router.route('/:id/members').post(protect, addMember);
-router.route('/:id/members/:userId').delete(protect, removeMember);
+const { protect } = require("../middleware/authMiddleware");
+
+router.route("/").post(protect, createProject).get(protect, getProjects);
+
+router
+  .route("/:id")
+  .get(protect, getProjectById)
+  .put(protect, updateProject)
+  .delete(protect, deleteProject);
+
+router.route("/:id/invite").post(protect, inviteMember);
+
+router.route("/:id/members").post(protect, addMember);
+
+router.route("/:id/members/:userId").delete(protect, removeMember);
 
 module.exports = router;
