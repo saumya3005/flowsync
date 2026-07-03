@@ -2,133 +2,162 @@
 
 # 🚀 FlowSync
 
-### Modern AI-Powered Project Management & Team Collaboration Platform
+### A Modern Project Management & Team Collaboration Platform
 
-<img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js"/>
-<img src="https://img.shields.io/badge/Node.js-Express-green?style=for-the-badge&logo=node.js"/>
-<img src="https://img.shields.io/badge/MongoDB-Database-green?style=for-the-badge&logo=mongodb"/>
-<img src="https://img.shields.io/badge/Socket.IO-Realtime-black?style=for-the-badge&logo=socket.io"/>
-<img src="https://img.shields.io/badge/JWT-Authentication-red?style=for-the-badge"/>
-<img src="https://img.shields.io/badge/License-MIT-blue?style=for-the-badge"/>
+<p>
+  <img src="https://readme-typing-svg.herokuapp.com?font=Poppins&size=26&duration=2800&pause=900&color=635BFF&center=true&vCenter=true&width=900&lines=Manage+Projects+Smarter.;Track+Tasks+Faster.;Collaborate+in+Real-Time.;Built+for+Modern+Teams." />
+</p>
 
----
+<p>
+  <img src="https://img.shields.io/badge/Frontend-Next.js-black?style=for-the-badge&logo=next.js" />
+  <img src="https://img.shields.io/badge/Backend-Node.js+Express-339933?style=for-the-badge&logo=node.js&logoColor=white" />
+  <img src="https://img.shields.io/badge/Database-MongoDB-47A248?style=for-the-badge&logo=mongodb&logoColor=white" />
+  <img src="https://img.shields.io/badge/Realtime-Socket.io-010101?style=for-the-badge&logo=socket.io" />
+  <img src="https://img.shields.io/badge/Auth-JWT-FF6B6B?style=for-the-badge" />
+</p>
 
-### ⚡ Manage Projects • Collaborate in Real-Time • Meet • Track Tasks • Stay Productive
+<p>
+  <a href="https://flowsync-peach-five.vercel.app">
+    <img src="https://img.shields.io/badge/Live_Demo-Open_App-635BFF?style=for-the-badge&logo=vercel&logoColor=white" />
+  </a>
+  <a href="https://flowsync-lc3f.onrender.com/api/health">
+    <img src="https://img.shields.io/badge/API-Healthy-00C2A8?style=for-the-badge" />
+  </a>
+</p>
 
 </div>
 
 ---
 
-# 📌 Overview
+## ✨ About FlowSync
 
-FlowSync is a modern SaaS project management platform inspired by **Trello**, **Asana**, **Linear**, and **Google Meet**.
+**FlowSync** is a full-stack SaaS-style project management platform built for teams, developers, students, and project collaborators.
 
-It enables teams to collaborate efficiently through real-time project management, task tracking, Kanban boards, meetings, notifications, authentication, and team collaboration.
+It combines the productivity of **Trello**, the structure of **Asana**, the speed of **Linear**, and collaboration features inspired by **Google Meet**.
 
-Designed with scalability, performance, and beautiful UI in mind.
-
----
-
-# ✨ Features
-
-## 🔐 Authentication
-
-- JWT Authentication
-- Login / Signup
-- Protected Routes
-- Secure Cookies
-- Role Based Access
-- Session Persistence
+With FlowSync, users can manage projects, create tasks, invite members, track progress, collaborate in real time, and organize work inside a modern dashboard.
 
 ---
 
-## 📊 Dashboard
+## 🌐 Live Links
 
-- User Dashboard
-- Project Statistics
-- Task Statistics
-- Recent Projects
-- Recent Tasks
-- Activity Cards
-- Quick Actions
-
----
-
-## 📁 Projects
-
-- Create Projects
-- Edit Projects
-- Delete Projects
-- Search Projects
-- Filter Projects
-- Project Members
-- Project Timeline
-- Due Dates
-- Priority
-- Owner Management
+| Type | Link |
+|---|---|
+| 🚀 Frontend | https://flowsync-peach-five.vercel.app |
+| ⚙️ Backend Health | https://flowsync-lc3f.onrender.com/api/health |
+| 🗄️ Database | MongoDB Atlas |
+| ☁️ Frontend Deploy | Vercel |
+| ☁️ Backend Deploy | Render |
 
 ---
 
-## ✅ Tasks
+## 🎯 Core Highlights
 
-- Create Tasks
-- Edit Tasks
-- Delete Tasks
-- Assign Members
-- Priority
-- Labels
-- Due Dates
-- Checklist
-- Status
-- Activity Timeline
-
----
-
-## 👥 Team
-
-- Team Members
-- Member Profiles
-- Invite Members
-- Member Roles
-- Online Status
-- Search Users
+- 🔐 Secure authentication with JWT
+- 📊 Dynamic dashboard with real data
+- 📁 Project creation, editing, deletion
+- ✅ Task creation, editing, assignment, deletion
+- 👥 Team member management
+- 📩 Invite member structure
+- 🔔 Notification system structure
+- 🎥 Meeting room and WebRTC signaling structure
+- ⚡ Real-time updates using Socket.io
+- 🎨 Premium SaaS-style UI
+- 📱 Responsive layout for desktop and mobile
+- ☁️ Deployed with Vercel + Render + MongoDB Atlas
 
 ---
 
-## 🎥 Meetings
+## 🧩 Feature Overview
 
-- Video Meetings
-- Camera Controls
-- Microphone Controls
-- Screen Share
-- Meeting Rooms
-- WebRTC
-- Socket.io Signaling
+<table>
+<tr>
+<td width="50%">
+
+### 📊 Dashboard
+- User-specific dashboard
+- Total projects
+- Active tasks
+- Completed tasks
+- Overdue tasks
+- Recent projects
+- Recent tasks
+
+</td>
+<td width="50%">
+
+### 📁 Projects
+- Create projects
+- Edit projects
+- Delete projects
+- Project owner
+- Project members
+- Priority and due dates
+- Member roles
+
+</td>
+</tr>
+
+<tr>
+<td width="50%">
+
+### ✅ Tasks
+- Create tasks
+- Edit tasks
+- Delete tasks
+- Assign tasks
+- Task priority
+- Task status
+- Labels and deadlines
+
+</td>
+<td width="50%">
+
+### 👥 Team
+- View team members
+- Invite members
+- Role-based structure
+- User avatars
+- Email-based member flow
+- Online status structure
+
+</td>
+</tr>
+
+<tr>
+<td width="50%">
+
+### 🎥 Meetings
+- Meeting rooms
+- Room ID structure
+- Join meeting flow
+- Socket.io signaling
+- WebRTC-ready architecture
+- Mic/camera control structure
+
+</td>
+<td width="50%">
+
+### 🔔 Notifications
+- User-specific notifications
+- Project invite alerts
+- Task update alerts
+- Real-time notification structure
+- Read/unread flow structure
+
+</td>
+</tr>
+</table>
 
 ---
 
-## 🔔 Notifications
+## 🛠️ Tech Stack
 
-- Real-Time Notifications
-- Task Assignment
-- Meeting Alerts
-- Project Updates
-- Comment Notifications
+### Frontend
 
----
-
-## 🌙 Themes
-
-- Light Mode
-- Dark Mode
-- Responsive UI
-- Modern SaaS Design
-
----
-
-# 🛠 Tech Stack
-
-## Frontend
+<p>
+  <img src="https://skillicons.dev/icons?i=nextjs,react,tailwind,js" />
+</p>
 
 - Next.js
 - React
@@ -136,22 +165,29 @@ Designed with scalability, performance, and beautiful UI in mind.
 - Framer Motion
 - Axios
 - Context API
+- Lucide React
 
----
+### Backend
 
-## Backend
+<p>
+  <img src="https://skillicons.dev/icons?i=nodejs,express,mongodb" />
+</p>
 
 - Node.js
 - Express.js
 - MongoDB
 - Mongoose
-- JWT
+- JWT Authentication
+- bcrypt.js
 - Socket.io
-- bcrypt
+- Cookie Parser
+- dotenv
 
----
+### Deployment
 
-## Deployment
+<p>
+  <img src="https://skillicons.dev/icons?i=vercel" />
+</p>
 
 - Vercel
 - Render
@@ -159,56 +195,92 @@ Designed with scalability, performance, and beautiful UI in mind.
 
 ---
 
-# 📂 Project Structure
+## 🏗️ Architecture
 
+```txt
+┌───────────────────────────────┐
+│           User Browser         │
+└───────────────┬───────────────┘
+                │
+                ▼
+┌───────────────────────────────┐
+│       Next.js Frontend         │
+│  Pages • Components • Context  │
+└───────────────┬───────────────┘
+                │ Axios / Socket.io
+                ▼
+┌───────────────────────────────┐
+│      Express.js Backend        │
+│ Routes • Controllers • Models  │
+└───────────────┬───────────────┘
+                │
+                ▼
+┌───────────────────────────────┐
+│         MongoDB Atlas          │
+│ Users • Projects • Tasks       │
+│ Comments • Meetings • Alerts   │
+└───────────────────────────────┘
 ```
-FlowSync
+
+---
+
+## 📂 Folder Structure
+
+```txt
+flowsync/
 │
-├── client/
-│   ├── src/
-│   ├── components/
-│   ├── context/
-│   ├── hooks/
+├── src/
 │   ├── app/
-│   └── lib/
+│   │   ├── dashboard/
+│   │   ├── projects/
+│   │   ├── tasks/
+│   │   ├── team/
+│   │   ├── meetings/
+│   │   ├── notifications/
+│   │   ├── settings/
+│   │   ├── login/
+│   │   └── signup/
+│   │
+│   ├── components/
+│   │   ├── layout/
+│   │   ├── modals/
+│   │   └── ui/
+│   │
+│   ├── context/
+│   ├── lib/
+│   └── utils/
 │
 ├── server/
+│   ├── config/
 │   ├── controllers/
 │   ├── middleware/
 │   ├── models/
 │   ├── routes/
 │   ├── utils/
-│   └── config/
+│   └── index.js
 │
+├── package.json
 └── README.md
 ```
 
 ---
 
-# ⚙ Installation
+## ⚙️ Installation & Setup
 
-## Clone Repository
-
-```bash
-git clone https://github.com/yourusername/FlowSync.git
-```
-
-```
-cd FlowSync
-```
-
----
-
-## Install Client
+### 1. Clone the Repository
 
 ```bash
-cd client
+git clone https://github.com/saumya3005/flowsync.git
+cd flowsync
+```
+
+### 2. Install Frontend Dependencies
+
+```bash
 npm install
 ```
 
----
-
-## Install Server
+### 3. Install Backend Dependencies
 
 ```bash
 cd server
@@ -217,203 +289,272 @@ npm install
 
 ---
 
-## Environment Variables
+## 🔐 Environment Variables
 
-### Server
+Create a `.env` file inside the `server` folder:
 
-```
+```env
 PORT=5001
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+CLIENT_URL=http://localhost:3000
+NODE_ENV=development
+```
 
-MONGO_URI=
+For frontend deployment, add these variables in Vercel:
 
-JWT_SECRET=
-
-CLIENT_URL=
+```env
+NEXT_PUBLIC_API_URL=https://your-render-backend-url.onrender.com/api
+NEXT_PUBLIC_SOCKET_URL=https://your-render-backend-url.onrender.com
 ```
 
 ---
 
-## Run Backend
+## ▶️ Run Locally
+
+### Start Backend
 
 ```bash
 cd server
-
 npm run dev
 ```
 
----
+Backend runs on:
 
-## Run Frontend
+```txt
+http://localhost:5001
+```
+
+### Start Frontend
+
+Open a new terminal:
 
 ```bash
-cd client
-
+cd flowsync
 npm run dev
 ```
 
----
+Frontend runs on:
 
-# 🌐 Deployment
-
-Frontend
-
-```
-Vercel
-```
-
-Backend
-
-```
-Render
-```
-
-Database
-
-```
-MongoDB Atlas
+```txt
+http://localhost:3000
 ```
 
 ---
 
-# 🔗 API Routes
+## 🔗 API Routes
 
-## Authentication
+### Authentication
 
-```
-POST /api/auth/signup
-
-POST /api/auth/login
-
-POST /api/auth/logout
-
-GET /api/auth/me
+```http
+POST   /api/auth/signup
+POST   /api/auth/login
+POST   /api/auth/logout
+GET    /api/auth/me
 ```
 
----
+### Users
 
-## Projects
-
+```http
+GET    /api/users
+GET    /api/users/:id
+PUT    /api/users/profile
+PUT    /api/users/avatar
+PUT    /api/users/password
+PUT    /api/users/preferences
 ```
-GET /api/projects
 
-POST /api/projects
+### Projects
 
-PUT /api/projects/:id
-
+```http
+GET    /api/projects
+POST   /api/projects
+GET    /api/projects/:id
+PUT    /api/projects/:id
 DELETE /api/projects/:id
+POST   /api/projects/:id/invite
+POST   /api/projects/:id/members
+DELETE /api/projects/:id/members/:userId
 ```
 
----
+### Tasks
 
-## Tasks
-
-```
-GET /api/tasks
-
-POST /api/tasks
-
-PUT /api/tasks/:id
-
+```http
+GET    /api/tasks
+POST   /api/tasks
+GET    /api/tasks/:id
+PUT    /api/tasks/:id
 DELETE /api/tasks/:id
+PATCH  /api/tasks/:id/status
+POST   /api/tasks/:id/checklist
+PATCH  /api/tasks/:id/checklist/:itemId
+```
+
+### Notifications
+
+```http
+GET    /api/notifications
+PATCH  /api/notifications/:id/read
+PATCH  /api/notifications/read-all
+```
+
+### Meetings
+
+```http
+POST   /api/meetings
+GET    /api/meetings
+GET    /api/meetings/:roomId
+POST   /api/meetings/:roomId/join
 ```
 
 ---
 
-## Users
+## 🧠 What I Learned
 
-```
-GET /api/users
+While building FlowSync, I worked on:
 
-PUT /api/users/profile
+- Full-stack MERN-style architecture
+- JWT authentication
+- Protected frontend routes
+- MongoDB data modeling
+- REST API design
+- Real-time Socket.io events
+- Project and task CRUD operations
+- Deployment using Vercel and Render
+- CORS handling in production
+- SaaS dashboard UI/UX design
+- Context-based state management
+
+---
+
+## 🖼️ Screenshots
+
+> Add your screenshots inside a folder like `public/screenshots/` and update the image paths below.
+
+```md
+![Dashboard](public/screenshots/dashboard.png)
+![Projects](public/screenshots/projects.png)
+![Tasks](public/screenshots/tasks.png)
+![Team](public/screenshots/team.png)
 ```
 
 ---
 
-## Meetings
+## 🚀 Roadmap
 
-```
-POST /api/meetings
-
-GET /api/meetings
-```
-
----
-
-# 📱 Screenshots
-
-> Add screenshots here
-
-```
-Dashboard
-
-Projects
-
-Tasks
-
-Kanban Board
-
-Meetings
-
-Team
-
-Settings
-```
+- [x] JWT Authentication
+- [x] Project CRUD
+- [x] Task CRUD
+- [x] Deployment
+- [x] Dynamic dashboard
+- [ ] Advanced Kanban drag-and-drop
+- [ ] Full meeting experience
+- [ ] Email invitations
+- [ ] OTP verification
+- [ ] File attachments
+- [ ] Advanced analytics
+- [ ] Calendar view
+- [ ] AI task suggestions
+- [ ] Mobile PWA
 
 ---
 
-# 🚧 Roadmap
+## 🧪 Testing Checklist
 
-- Email Invitations
-- OTP Verification
-- Twilio Integration
-- Google Calendar
-- Google Meet Integration
-- AI Task Suggestions
-- AI Project Insights
-- Team Analytics
-- Mobile App
-- Push Notifications
-
----
-
-# 🤝 Contributing
-
-Contributions are always welcome.
-
-1. Fork the repository
-
-2. Create your branch
-
-3. Commit changes
-
-4. Push branch
-
-5. Open Pull Request
+- [x] Signup
+- [x] Login
+- [x] Logout
+- [x] Create project
+- [x] Edit project
+- [x] Delete project
+- [x] Create task
+- [x] Edit task
+- [x] Delete task
+- [x] Dashboard loads real data
+- [x] Backend deployed
+- [x] Frontend deployed
+- [ ] Team role management
+- [ ] Full meeting testing
+- [ ] Advanced notifications
 
 ---
 
-# 👨‍💻 Author
+## 🚀 Deployment
 
-**Saumya Agrahari**
+### Frontend: Vercel
 
-GitHub
+```txt
+https://flowsync-peach-five.vercel.app
+```
 
-https://github.com/saumya3005
+### Backend: Render
 
-LinkedIn
+```txt
+https://flowsync-lc3f.onrender.com
+```
 
-https://linkedin.com/in/saumya-agrahari-924900347
+### Database: MongoDB Atlas
 
-Email
+Used for storing:
 
-saumyaagrahari262730@gmail.com
+- Users
+- Projects
+- Tasks
+- Comments
+- Notifications
+- Meetings
+
+---
+
+## 👩‍💻 Author
+
+<div align="center">
+
+### Saumya Agrahari
+
+**B.Tech AI & ML Student | Full-Stack Developer | Project Builder**
+
+<p>
+  <a href="https://github.com/saumya3005">
+    <img src="https://img.shields.io/badge/GitHub-saumya3005-black?style=for-the-badge&logo=github" />
+  </a>
+  <a href="https://www.linkedin.com/in/saumya-agrahari-924900347">
+    <img src="https://img.shields.io/badge/LinkedIn-Saumya_Agrahari-blue?style=for-the-badge&logo=linkedin" />
+  </a>
+  <a href="mailto:saumyaagrahari262730@gmail.com">
+    <img src="https://img.shields.io/badge/Email-Contact-red?style=for-the-badge&logo=gmail&logoColor=white" />
+  </a>
+</p>
+
+</div>
+
+---
+
+## 🤝 Contribution
+
+Contributions are welcome.
+
+```bash
+git fork
+git checkout -b feature-name
+git commit -m "Add feature"
+git push origin feature-name
+```
+
+Then open a Pull Request.
+
+---
+
+## 📜 License
+
+This project is licensed under the **MIT License**.
 
 ---
 
 <div align="center">
 
-## ⭐ If you like this project, don't forget to Star the Repository ⭐
+## ⭐ Star this repository if you like FlowSync
 
-Made with ❤️ by **Saumya Agrahari**
+### Built with ❤️ by Saumya Agrahari
 
 </div>
