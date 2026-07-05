@@ -13,7 +13,8 @@ export function SocketProvider({ children }) {
   useEffect(() => {
     if (user && user.token) {
       // Connect to Socket.io server
-      const newSocket = io('http://localhost:5001', {
+      const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:5001';
+      const newSocket = io(socketUrl, {
         auth: {
           token: user.token
         }
