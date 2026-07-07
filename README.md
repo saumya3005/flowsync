@@ -501,7 +501,6 @@ Used for storing:
 - Projects
 - Tasks
 - Comments
-- Notifications
 - Meetings
 
 ---
