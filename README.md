@@ -425,7 +425,6 @@ While building FlowSync, I worked on:
 - SaaS dashboard UI/UX design
 - Context-based state management
 
----
 
 ## 🖼️ Screenshots
 
@@ -531,7 +530,7 @@ Used for storing:
 
 ## 🤝 Contribution
 
-Contributions are welcome
+Contributions are welcome.
 
 ```bash
 git fork
