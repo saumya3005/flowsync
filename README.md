@@ -454,7 +454,6 @@ While building FlowSync, I worked on:
 - [ ] Advanced analytics
 - [ ] Calendar view
 - [ ] AI task suggestions
-- [ ] Mobile PWA
 
 ---
 
