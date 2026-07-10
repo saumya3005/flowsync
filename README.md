@@ -415,7 +415,6 @@ While building FlowSync, I worked on:
 
 - Full-stack MERN-style architecture
 - JWT authentication
-- Protected frontend routes
 - MongoDB data modeling
 - REST API design
 - Real-time Socket.io events
