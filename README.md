@@ -462,7 +462,7 @@ While building FlowSync, I worked on
 - [x] Logout
 - [x] Create project
 - [x] Edit project
-- [x] Delete project
+- [ ] Delete project
 - [ ] Create task
 - [ ] Edit task
 - [ ] Delete task
