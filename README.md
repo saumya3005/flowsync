@@ -464,8 +464,8 @@ While building FlowSync, I worked on
 - [x] Edit project
 - [x] Delete project
 - [x] Create task
-- [x] Edit task
-- [x] Delete task
+- [ ] Edit task
+- [ ] Delete task
 - [ ] Dashboard loads real data
 - [ ] Backend deployed
 - [ ] Frontend deployed
