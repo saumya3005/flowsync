@@ -463,7 +463,7 @@ While building FlowSync, I worked on
 - [x] Create project
 - [x] Edit project
 - [x] Delete project
-- [x] Create task
+- [ ] Create task
 - [ ] Edit task
 - [ ] Delete task
 - [ ] Dashboard loads real data
