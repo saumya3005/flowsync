@@ -411,7 +411,7 @@ POST   /api/meetings/:roomId/join
 
 ## 🧠 What I Learned
 
-While building FlowSync, I worked on:
+While building FlowSync, I worked on
 
 - JWT authentication
 - MongoDB data modeling
@@ -443,7 +443,7 @@ While building FlowSync, I worked on:
 - [x] Project CRUD
 - [x] Task CRUD
 - [x] Deployment
-- [x] Dynamic dashboard
+- [ ] Dynamic dashboard
 - [ ] Advanced Kanban drag-and-drop
 - [ ] Full meeting experience
 - [ ] Email invitations
