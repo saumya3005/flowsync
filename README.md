@@ -457,7 +457,7 @@ While building FlowSync, I worked on
 
 ## 🧪 Testing Checklist
 
-- [x] Signup
+- [ ] Signup
 - [ ] Login
 - [ ] Logout
 - [ ] Create project
