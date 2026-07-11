@@ -460,7 +460,7 @@ While building FlowSync, I worked on
 - [x] Signup
 - [x] Login
 - [x] Logout
-- [x] Create project
+- [ ] Create project
 - [ ] Edit project
 - [ ] Delete project
 - [ ] Create task
