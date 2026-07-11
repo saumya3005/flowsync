@@ -459,7 +459,7 @@ While building FlowSync, I worked on
 
 - [x] Signup
 - [x] Login
-- [x] Logout
+- [ ] Logout
 - [ ] Create project
 - [ ] Edit project
 - [ ] Delete project
