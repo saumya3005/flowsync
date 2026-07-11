@@ -413,7 +413,6 @@ POST   /api/meetings/:roomId/join
 
 While building FlowSync, I worked on:
 
-- Full-stack MERN-style architecture
 - JWT authentication
 - MongoDB data modeling
 - REST API design
