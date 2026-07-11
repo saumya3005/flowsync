@@ -440,9 +440,9 @@ While building FlowSync, I worked on
 ## 🚀 Roadmap
 
 - [x] JWT Authentication
-- [x] Project CRUD
-- [x] Task CRUD
-- [x] Deployment
+- [ ] Project CRUD
+- [ ] Task CRUD
+- [ ] Deployment
 - [ ] Dynamic dashboard
 - [ ] Advanced Kanban drag-and-drop
 - [ ] Full meeting experience
