@@ -439,7 +439,7 @@ While building FlowSync, I worked on
 
 ## 🚀 Roadmap
 
-- [x] JWT Authentication
+- [ ] JWT Authentication
 - [ ] Project CRUD
 - [ ] Task CRUD
 - [ ] Deployment
@@ -466,9 +466,9 @@ While building FlowSync, I worked on
 - [x] Create task
 - [x] Edit task
 - [x] Delete task
-- [x] Dashboard loads real data
-- [x] Backend deployed
-- [x] Frontend deployed
+- [ ] Dashboard loads real data
+- [ ] Backend deployed
+- [ ] Frontend deployed
 - [ ] Team role management
 - [ ] Full meeting testing
 - [ ] Advanced notifications
