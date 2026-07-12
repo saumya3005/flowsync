@@ -538,7 +538,6 @@ git push origin feature-name
 
 Then open a Pull Request.
 
----
 
 ## 📜 License
 
