@@ -527,7 +527,7 @@ Used for storing:
 
 ## 🤝 Contribution
 
-Contributions are welcome
+Contributions are welcome.
 
 ```bash
 git fork
