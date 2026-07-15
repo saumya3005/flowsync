@@ -536,7 +536,7 @@ git commit -m "Add feature"
 git push origin feature-name
 ```
 
-Then open a Pull Request...
+Then open a Pull Request.
 
 
 ## 📜 License
