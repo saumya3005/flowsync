@@ -423,6 +423,9 @@ While building FlowSync, I worked on
 - SaaS dashboard UI/UX design
 - Context-based state management
 
+## 🚀 Latest Update
+
+Built with React + Modern UI.
 
 ## 🖼️ Screenshots
 
