@@ -425,7 +425,7 @@ While building FlowSync, I worked on
 
 ## 🚀 Latest Update
 
-Built with React + Modern UI.
+Improved project documentation
 
 ## 🖼️ Screenshots
 
